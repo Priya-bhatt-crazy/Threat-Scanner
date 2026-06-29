@@ -1,175 +1,422 @@
-1. Project Scope &amp; Realized Implementation Architecture
-The Malicious Threat Scanner &amp; Response System is an AI-assisted security solution
-developed specifically for the OSF Hackathon context. The codebase establishes a functional
-client-server model focused on endpoint activity auditing, background event observation, and
-synchronous user warning systems through a web interface. By shifting away from hypothetical
-enterprise EDR assumptions, this technical specification documents the code&#39;s concrete
-implementation scope, focusing on verified Python modules and React component interactions.
-Code Audit Notice: This document outlines the verified capabilities within the submitted code layers,
-using an on-disk SQLite persistence engine (sentinelx.db) and focused monitoring namespaces.
+# 🛡️ Malicious Threat Scanner & Response System
 
-2. Core Technical Objectives
- Endpoint Monitoring: Execute foreground and background telemetry tracking of active
-runtime elements using targeted operating system interfaces.
- Behavioral Profiling: Evaluate changing states in specific directories and runtime execution
-fields via rule-based metrics and risk markers.
- Threat Intelligence Brokerage: Enrich local detection data by querying external APIs when
-specific file state changes or warnings are logged.
- Mitigation Execution: Provide immediate mitigation workflows, such as killing target
-processes or isolating files, directly from a centralized administrator dashboard.
-3. System Architecture &amp; Internal Components
-The implementation follows a clean decoupled structure consisting of a React-driven user
-interface and an asynchronous FastAPI application wrapper.
-3.1 Core Architecture Flow Mapping
-• React Frontend Interface (Dashboard, Real-time Charts, Process Lists)
-│ (Exchanges data over HTTP REST using JSON Data Formats via Axios client)
-• FastAPI Application Routing Layer
-├── Authentication Broker (JWT Tokens &amp; Cryptographic Password Checking)
-├── Monitoring Controller (Coordinates individual monitoring threads)
-│ ├── Process Tracker (psutil engine context loops)
-│ ├── File System Monitor (watchdog monitoring loops over target paths)
-│ └── USB Device Listener (Monitors storage attachment signals)
+> **An AI-Assisted Real-Time Endpoint Security Solution for Threat Detection, Monitoring, and Automated Response**
 
-├── Threat Analysis Engine (Evaluates heuristic threat weights)
-├── External Integrations (VirusTotal API reputation checks)
-└── Persistence Layer (SQLAlchemy ORM mapping to sentinelx.db SQLite file)
-4. Subsystem Module Audits
-4.1 Authentication Subsystem
-Located within the app/auth/ directory path, this module handles identity validation and API
-route protection. Key files include:
- auth/routes.py: Defines user authentication endpoints and session validation rules.
- auth/security.py: Implements security protocols, cryptographic signature utilities, and token
-creation routines.
- auth/dependencies.py: Handles parameter checks, extract headers, and checks role-
-based access privileges.
-4.2 System Monitoring Controller
-The monitoring components run as background threads managed by a central manager:
- Process Tracker: Leverages psutil to gather data on running processes, CPU loads, and
-active memory allocation states.
- File Monitor: Uses the watchdog framework to track a target watch folder, immediately
-catching file creation, mutation, and removal actions.
- USB Monitoring Module: Listens for removable hardware storage attachments, sending
-data back to the primary alert stream.
- Monitoring Manager: Acts as an orchestrator that boots monitoring loops, tracks execution
-status, and ensures cross-module synchronization.
-4.3 Detection &amp; External Intelligence Packages
-The app/detection/threat_detector.py file runs heuristic checks to generate threat scores based
-on process parameters and file attributes. Once labeled suspicious, the file details are passed to
-the intelligence subsystem:
-intelligence/
-├── virustotal.py # Manages outbound communication with the VirusTotal public
-API
-└── signatures.py # Evaluates static file patterns and localized rule-sets
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
+![React](https://img.shields.io/badge/React-Frontend-61DAFB)
+![Vite](https://img.shields.io/badge/Vite-Build-purple)
+![SQLite](https://img.shields.io/badge/SQLite-Database-blue)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-4.4 Incident Mitigation &amp; Response Logic
-The app/response/ directory contains code designed to mitigate identified threats based on
-configuration toggles:
+---
 
- Process Killer: Executes process termination tasks via targeted system calls using the
-target PID.
- File Quarantine: Moves suspected malicious files out of active folders into an isolated
-cryptographic holding directory.
- Alert Generation: Writes incidents directly to persistent storage to display them in the live
-UI feed.
-5. Technical Stack &amp; File Tree Blueprint
-Layer Component Tech Implementation Target Scope
-Frontend UI React, Vite, Tailwind CSS Web UI dashboards, system stats,
+## 📖 Overview
 
-charts
+The **Malicious Threat Scanner & Response System** is an AI-assisted cybersecurity application developed for the **OSF Hackathon**. It provides real-time monitoring of endpoint activities, detects suspicious behavior using heuristic analysis, integrates with external threat intelligence, and enables automated response actions through an interactive web dashboard.
 
-API Layer FastAPI, Uvicorn Server Asynchronous endpoints, request
+Unlike traditional antivirus software that primarily relies on signature-based detection, this system focuses on monitoring system behavior, identifying suspicious activities, and providing administrators with actionable security insights.
 
-routing
+---
 
-OS Telemetry psutil, watchdog framework Process tracking, file change
+## 🎯 Objectives
 
-events
+* Monitor endpoint activities in real time.
+* Detect suspicious processes and file activities.
+* Analyze system behavior using heuristic detection techniques.
+* Verify suspicious files through VirusTotal.
+* Generate real-time alerts.
+* Support automated threat response.
+* Provide an intuitive security dashboard for administrators.
 
-Storage Layer SQLite (sentinelx.db),
-SQLAlchemy
+---
 
-Relational database logs, alert
-tables
+# ✨ Features
 
-External Services VirusTotal Public API Core Remote hash validation and
+### 🔍 Real-Time Monitoring
 
-lookups
+* Running Process Monitoring
+* File System Monitoring
+* USB Device Monitoring
+* CPU & Memory Usage Tracking
+* Live System Status Monitoring
 
-5.1 Project Layout
-backend/app/
-├── api/ # API router endpoints
-├── auth/ # Authentication &amp; security handlers
-├── core/ # Configuration options and core logic
-├── database/ # Models &amp; database session scripts
-├── detection/ # Threat scoring and analysis code
-├── intelligence/ # VirusTotal client integrations
-├── monitoring/ # psutil and watchdog threads
-├── response/ # Threat mitigation tools
-└── main.py # Primary system launch file
+---
 
-6. Internal API Interface Definitions
+### 🛡️ Threat Detection
 
-Method URI Path Route Backend Component Action
+* Heuristic-based threat analysis
+* Suspicious process identification
+* Suspicious file detection
+* Threat scoring
+* Real-time alert generation
 
-POST /login Validates user credentials and
-issues a JWT token.
+---
 
-GET /system/status Returns host hardware telemetry
+### 🌐 Threat Intelligence
 
-(CPU, RAM).
+Integrated with:
 
-GET /processes Lists current running processes
+* VirusTotal API
 
-and metadata.
+Used for:
 
-GET /alerts Queries sentinelx.db for generated
+* File reputation lookup
+* Malware verification
+* Threat validation
 
-alerts.
+---
 
-POST /response/kill-process Terminates a running target
+### ⚡ Automated Response
 
-process via PID.
+The system supports automated mitigation actions such as:
 
-POST /response/quarantine Isolates a suspicious file to a
+* Process termination
+* File quarantine
+* Alert generation
+* Incident logging
 
-secure directory.
+---
 
-POST /simulation Triggers simulated threat events
+### 📊 Interactive Dashboard
 
-for system testing.
+The React dashboard provides:
 
-7. Runtime Processes &amp; Workflows
-7.1 Monitoring &amp; Alert Workflow Lifecycle
-1. System Starts -&gt; Initialize Configuration Models
-2. Launch Monitoring Manager -&gt; Start Background Isolation Threads
-3. Process Tracker (psutil) &amp; File Monitor (watchdog) begin data ingestion loops
-4. Intercept Events -&gt; Process passes payload to Threat Detector engine
-5. Run Heuristic Review -&gt; Cross-checks file details using the VirusTotal API client
-6. Log Incidents -&gt; Appends threat entries to sentinelx.db &amp; sends data to dashboard
-7. UI Auto-Refresh -&gt; Renders alert components and updates status graphs
-7.2 Local Test Cases &amp; Simulated Payloads
-The watch_folder/ path contains test targets designed to verify the watchdog monitor and
-detection scoring logic:
+* Live Alerts
+* Running Processes
+* File Monitoring Logs
+* Network Information
+* Threat Statistics
+* System Performance
+* Threat Charts
+* Monitoring Settings
 
- hello.txt / test123.txt: Validates typical, clean text-file monitoring pipelines.
- invoice.pdf.exe: Triggers double-extension scoring rules within the detector module.
- encrypted.locked: Simulates a simulated ransomware artifact to test alert triggering.
-8. Frontend UI Components
-The frontend application dashboard uses structured React layout components to present
-endpoint data clearly:
- Alerts Panel: Renders active alerts stored in the SQLite database.
- Process &amp; Network Tables: Displays live system performance data and active processes
-via psutil.
- Threat Chart: Uses Chart.js to visualize incident trends over time.
- Settings Modal: Allows administrators to change active parameters and modify monitoring
-behavior.
-9. System Scope Limitations &amp; Future Roadmap
-This implementation provides a solid framework for endpoint monitoring within a hackathon
-project scope. To scale this into a production-ready Endpoint Detection and Response (EDR)
-solution, the following enhancements are planned:
- Database Scaling: Migrate from simple on-disk SQLite storage to enterprise database
-clusters with connection pooling.
- Heuristic Enhancements: Replace basic signature and file rule sets with local deep
-learning models for advanced threat detection.
- Deep System Monitoring: Add kernel-level drivers to capture low-level operating system
-events that standard user-space tools miss.
+---
+
+## 🏗️ System Architecture
+
+```text
+                React Frontend
+                       │
+             REST API (JSON)
+                       │
+                FastAPI Backend
+                       │
+ ┌───────────────────────────────────────┐
+ │ Authentication                        │
+ │ Monitoring Manager                    │
+ │ ├── Process Monitor (psutil)          │
+ │ ├── File Monitor (watchdog)           │
+ │ └── USB Monitor                       │
+ │                                       │
+ │ Threat Detection Engine               │
+ │ VirusTotal Integration                │
+ │ Response Engine                       │
+ │ SQLite Database                       │
+ └───────────────────────────────────────┘
+```
+
+---
+
+# ⚙️ Technology Stack
+
+| Category            | Technology                |
+| ------------------- | ------------------------- |
+| Frontend            | React, Vite, Tailwind CSS |
+| Backend             | FastAPI, Python           |
+| Database            | SQLite, SQLAlchemy        |
+| Monitoring          | psutil, watchdog          |
+| Threat Intelligence | VirusTotal API            |
+| HTTP Client         | Axios                     |
+| Authentication      | JWT-based Authentication  |
+| Charts              | Chart.js                  |
+
+---
+
+# 📂 Project Structure
+
+```text
+backend/
+│
+├── app/
+│   ├── api/
+│   ├── auth/
+│   ├── core/
+│   ├── database/
+│   ├── detection/
+│   ├── intelligence/
+│   ├── monitoring/
+│   ├── response/
+│   ├── schemas/
+│   └── services/
+│
+├── main.py
+└── sentinelx.db
+
+frontend/
+│
+├── src/
+│   ├── auth/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   └── App.jsx
+│
+├── package.json
+└── vite.config.js
+
+watch_folder/
+README.md
+```
+
+---
+
+# 🔄 System Workflow
+
+```text
+System Starts
+      │
+      ▼
+Monitoring Manager
+      │
+      ├──────────────┐
+      │              │
+      ▼              ▼
+Process Monitor   File Monitor
+      │              │
+      ▼              ▼
+Threat Detection Engine
+      │
+      ▼
+VirusTotal Verification
+      │
+      ▼
+Threat Classification
+      │
+      ▼
+Alert Generation
+      │
+      ▼
+SQLite Database
+      │
+      ▼
+Dashboard Update
+      │
+      ▼
+Response Actions
+```
+
+---
+
+# 🛠️ Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/<your-username>/Threat-Scanner.git
+cd Threat-Scanner
+```
+
+---
+
+## Backend Setup
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it:
+
+**Windows**
+
+```bash
+venv\Scripts\activate
+```
+
+**Linux/macOS**
+
+```bash
+source venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start the backend:
+
+```bash
+uvicorn main:app --reload
+```
+
+Backend URL:
+
+```text
+http://localhost:8000
+```
+
+---
+
+## Frontend Setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Frontend URL:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# 🔐 Authentication
+
+The application includes user authentication to secure dashboard access.
+
+* User Login
+* Protected Routes
+* JWT-based Authentication
+* Secure API Access
+
+---
+
+# 📁 Monitoring Modules
+
+## Process Monitoring
+
+Monitors:
+
+* Process Name
+* Process ID
+* CPU Usage
+* Memory Usage
+
+---
+
+## File Monitoring
+
+Detects:
+
+* File Creation
+* File Modification
+* File Deletion
+
+---
+
+## USB Monitoring
+
+Detects removable storage device events and forwards them to the monitoring subsystem.
+
+---
+
+# 🚨 Threat Detection Pipeline
+
+```text
+File / Process Event
+        │
+        ▼
+Behavior Analysis
+        │
+        ▼
+Threat Detection
+        │
+        ▼
+VirusTotal Lookup
+        │
+        ▼
+Threat Classification
+        │
+        ▼
+Alert Generation
+        │
+        ▼
+Response Execution
+```
+
+---
+
+# 📊 Dashboard Components
+
+* Dashboard Overview
+* Live Alerts Panel
+* Running Process Table
+* File Logs
+* Network Table
+* Threat Charts
+* System Statistics
+* Settings Panel
+
+---
+
+# 🧪 Test Files
+
+The project includes sample files to verify detection and monitoring functionality:
+
+```text
+watch_folder/
+├── hello.txt
+├── test123.txt
+├── invoice.pdf.exe
+└── encrypted.locked
+```
+
+These files help demonstrate monitoring behavior and detection logic during testing.
+
+---
+
+# 🔮 Future Enhancements
+
+* Advanced Machine Learning Models
+* Ransomware Detection
+* Linux & macOS Support
+* Additional Threat Intelligence Providers
+* SIEM Integration
+* Email Threat Scanning
+* Cloud Deployment
+* Enhanced Behavioral Analytics
+
+---
+
+# 👨‍💻 Team
+
+Developed as part of the **OSF Hackathon**.
+
+---
+
+# 📜 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## ⭐ Acknowledgements
+
+Special thanks to the open-source communities behind:
+
+* FastAPI
+* React
+* Vite
+* psutil
+* watchdog
+* SQLAlchemy
+* VirusTotal
+
+---
+
+## 📌 Conclusion
+
+The **Malicious Threat Scanner & Response System** demonstrates how real-time monitoring, behavioral analysis, and external threat intelligence can be combined to improve endpoint security. Built with a modular architecture using FastAPI and React, it provides a practical foundation for modern threat detection and automated incident response while remaining extensible for future enhancements.
