@@ -1,9 +1,5 @@
 """
 Heuristic threat scoring engine (Explainable AI).
-
-We replaced the scikit-learn dependency with a high-fidelity pure Python heuristic model.
-This avoids compilation issues on Python 3.14 while maintaining the exact same
-EDR scoring logic and Explainable AI explanations.
 """
 
 import math
@@ -15,97 +11,131 @@ def predict_threat(
     num_connections: int,
     file_changes: int,
     usb_active: int,
+    virustotal_score: int = 0,
+    behavior_bonus: int = 0,
 ):
     """
-    Predicts threat score and returns the score (0-100) and feature contributions (Explainable AI).
-    Implemented in pure Python to be robust and lightweight for the hackathon MVP.
+    Predicts a threat score (0-100) and returns an explanation.
     """
-    score = 0.0
 
-    # 1. Evaluate individual threat signals (matching training heuristic)
+    # -----------------------------
+    # Feature Contributions
+    # -----------------------------
     cpu_contribution = 0.0
-    if cpu_usage > 80.0:
-        cpu_contribution = 35.0
-    elif cpu_usage > 50.0:
-        cpu_contribution = 15.0
-
     mem_contribution = 0.0
-    if memory_mb > 1200.0:
-        mem_contribution = 15.0
-    elif memory_mb > 800.0:
-        mem_contribution = 8.0
-
     conn_contribution = 0.0
-    if num_connections > 20:
-        conn_contribution = 30.0
-    elif num_connections > 10:
-        conn_contribution = 15.0
-
     file_contribution = 0.0
-    if file_changes > 15:
-        file_contribution = 45.0
-    elif file_changes > 8:
-        file_contribution = 25.0
-
     usb_contribution = 0.0
-    if usb_active == 1:
-        if file_changes > 5:
-            usb_contribution = 40.0
-        elif num_connections > 8:
-            usb_contribution = 30.0
-        else:
-            usb_contribution = 10.0
+    vt_contribution = 0.0
 
-    # Calculate raw sum
+    if cpu_usage > 80:
+        cpu_contribution = 35
+    elif cpu_usage > 50:
+        cpu_contribution = 15
+
+    if memory_mb > 1200:
+        mem_contribution = 15
+    elif memory_mb > 800:
+        mem_contribution = 8
+
+    if num_connections > 20:
+        conn_contribution = 30
+    elif num_connections > 10:
+        conn_contribution = 15
+
+    if file_changes > 15:
+        file_contribution = 45
+    elif file_changes > 8:
+        file_contribution = 25
+
+    if usb_active:
+        if file_changes > 5:
+            usb_contribution = 40
+        elif num_connections > 8:
+            usb_contribution = 30
+        else:
+            usb_contribution = 10
+
+    # VirusTotal Bonus
+    if virustotal_score > 0:
+        vt_contribution = 35
+
+    # -----------------------------
+    # Calculate Score
+    # -----------------------------
     raw_score = (
         cpu_contribution
         + mem_contribution
         + conn_contribution
         + file_contribution
         + usb_contribution
+        + vt_contribution
+        + behavior_bonus
     )
 
-    # Cap and normalize to 0-100 using a smooth Sigmoid function for natural EDR scores
     if raw_score == 0:
-        threat_score = 2.0 + (cpu_usage / 10.0) + (num_connections * 0.5)
+        threat_score = 2 + (cpu_usage / 10) + (num_connections * 0.5)
     else:
-        # Logistic curve centered around 45 raw points
-        threat_score = 100.0 / (1.0 + math.exp(-0.08 * (raw_score - 40.0)))
+        threat_score = 100 / (1 + math.exp(-0.08 * (raw_score - 40)))
 
-    threat_score = min(max(round(threat_score, 1), 0.0), 100.0)
+    threat_score = round(min(max(threat_score, 0), 100), 1)
 
-    # Explainable AI: Feature contributions
+    # -----------------------------
+    # Explainable AI
+    # -----------------------------
     explanations = []
 
-    if cpu_usage > 75.0:
-        explanations.append(f"Abnormally high CPU utilization ({cpu_usage:.1f}%)")
-    if memory_mb > 800.0:
-        explanations.append(f"High memory consumption ({memory_mb:.1f} MB)")
+    if cpu_usage > 75:
+        explanations.append(f"High CPU Usage ({cpu_usage:.1f}%)")
+
+    if memory_mb > 800:
+        explanations.append(f"High Memory Usage ({memory_mb:.1f} MB)")
+
     if num_connections > 12:
         explanations.append(
-            f"Suspicious number of network connections ({num_connections} active)"
+            f"Suspicious Network Connections ({num_connections})"
         )
+
     if file_changes > 8:
         explanations.append(
-            f"Rapid directory modifications ({file_changes} file edits detected)"
+            f"Rapid File Changes ({file_changes})"
         )
-    if usb_active == 1:
-        explanations.append("Active process associated with USB mass storage insertion")
+
+    if usb_active:
+        explanations.append(
+            "USB Activity Detected"
+        )
+
+    if virustotal_score > 0:
+        explanations.append(
+            f"VirusTotal flagged file ({virustotal_score} engines)"
+        )
+
+    if behavior_bonus > 0:
+        explanations.append(
+            "Suspicious System Process Behavior"
+        )
 
     if not explanations:
-        if threat_score < 20:
-            explanations.append("System metrics are within normal baseline thresholds.")
-        else:
-            explanations.append("Combination of minor elevated system metrics.")
-
-    explanation_str = " | ".join(explanations)
+        explanations.append(
+            "System operating normally."
+        )
 
     return {
         "threat_score": threat_score,
-        "explanation": explanation_str,
+        "explanation": " | ".join(explanations),
     }
 
 
 if __name__ == "__main__":
-    test_pred = predict_threat(90.0, 1200.0, 25, 15, 1)
-    print("Test Prediction Output:", test_pred)
+    result = predict_threat(
+        cpu_usage=90,
+        memory_mb=1300,
+        num_connections=22,
+        file_changes=15,
+        usb_active=1,
+        virustotal_score=8,
+        behavior_bonus=20,
+    )
+
+    print(result)

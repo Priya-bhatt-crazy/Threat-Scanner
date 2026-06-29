@@ -1,69 +1,118 @@
 """
-Automatic threat response engine.
-
-Evaluates monitored processes against the configured threshold and triggers
-process termination when auto-response policy is enabled.
+Automatic Threat Response Engine
 """
 
 from app.database import Alert, SessionLocal, Setting
 from app.response.actions import kill_process
 
+# Critical Windows processes that should never be terminated
+PROTECTED_PROCESSES = {
+    "system",
+    "system idle process",
+    "wininit.exe",
+    "winlogon.exe",
+    "csrss.exe",
+    "services.exe",
+    "lsass.exe",
+    "smss.exe",
+    "explorer.exe",
+}
+
 
 def check_and_auto_respond(monitored_processes_list):
     """
-    Checks if auto-response is enabled and executes mitigation if a threat
-    exceeds the configured threshold.
+    Automatically terminates processes whose threat score exceeds
+    the configured threshold.
     """
-    db = SessionLocal()
-    try:
-        auto_respond_setting = db.query(Setting).filter(Setting.key == "auto_respond").first()
-        threshold_setting = db.query(Setting).filter(
-            Setting.key == "auto_respond_threshold"
-        ).first()
 
-        if not auto_respond_setting or auto_respond_setting.value.lower() != "true":
+    db = SessionLocal()
+
+    try:
+
+        auto_respond_setting = (
+            db.query(Setting)
+            .filter(Setting.key == "auto_respond")
+            .first()
+        )
+
+        threshold_setting = (
+            db.query(Setting)
+            .filter(Setting.key == "auto_respond_threshold")
+            .first()
+        )
+
+        if (
+            not auto_respond_setting
+            or auto_respond_setting.value.lower() != "true"
+        ):
             return
 
-        threshold = float(threshold_setting.value) if threshold_setting else 85.0
+        threshold = (
+            float(threshold_setting.value)
+            if threshold_setting
+            else 85.0
+        )
 
         for proc in monitored_processes_list:
-            if proc["threat_score"] >= threshold:
-                pid = proc["pid"]
-                name = proc["name"]
 
-                # Check if we already logged/killed this PID to avoid loops
-                already_killed = (
-                    db.query(Alert)
-                    .filter(
-                        Alert.type == "PROCESS",
-                        Alert.message.contains(f"PID {pid}"),
-                        Alert.status == "KILLED",
-                    )
-                    .first()
+            pid = proc["pid"]
+            name = proc["name"]
+
+            # Never terminate protected Windows processes
+            if name.lower() in PROTECTED_PROCESSES:
+                continue
+
+            if proc["threat_score"] < threshold:
+                continue
+
+            already_killed = (
+                db.query(Alert)
+                .filter(
+                    Alert.type == "PROCESS",
+                    Alert.message.contains(f"PID {pid}"),
+                    Alert.status == "KILLED",
                 )
+                .first()
+            )
 
-                if not already_killed:
-                    alert = Alert(
-                        type="AI",
-                        severity="CRITICAL",
-                        source=name,
-                        message=(
-                            f"AI engine triggered automatic response for {name} "
-                            f"(Threat: {proc['threat_score']}%). Terminating..."
-                        ),
-                        threat_score=proc["threat_score"],
-                        explanation=proc["explanation"],
-                        status="ACTIVE",
-                    )
-                    db.add(alert)
-                    db.commit()
+            if already_killed:
+                continue
 
-                    kill_process(pid)
-                    print(
-                        f"[AUTO-RESPOND] Automatically terminated process {name} (PID {pid}) "
-                        f"due to threat score {proc['threat_score']}%"
-                    )
+            alert = Alert(
+                type="AI",
+                severity="CRITICAL",
+                source=name,
+                message=(
+                    f"Automatic response triggered for "
+                    f"{name} (PID {pid})"
+                ),
+                threat_score=proc["threat_score"],
+                explanation=proc["explanation"],
+                status="ACTIVE",
+            )
+
+            db.add(alert)
+            db.commit()
+
+            # Kill Process
+            kill_process(pid)
+
+            # Mark Alert
+            alert.status = "KILLED"
+            db.commit()
+
+            print("\n" + "=" * 60)
+            print("🚨 THREAT DETECTED")
+            print("=" * 60)
+            print(f"Process      : {name}")
+            print(f"PID          : {pid}")
+            print(f"Threat Score : {proc['threat_score']}%")
+            print(f"Reason       : {proc['explanation']}")
+            print("Action       : Process Terminated")
+            print("=" * 60 + "\n")
+
     except Exception as e:
-        print(f"Error in auto-response evaluation: {e}")
+        print(f"[AUTO RESPONSE ERROR] {e}")
+
     finally:
         db.close()

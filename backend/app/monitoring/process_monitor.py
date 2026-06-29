@@ -89,12 +89,35 @@ def process_and_network_monitor_thread() -> None:
                     file_changes = state.recent_file_changes_count
                     usb_active = 1 if state.usb_connected else 0
 
+                    # -----------------------------
+                    # Behavior Analysis
+                    # -----------------------------
+                    behavior_bonus = 0
+
+                    suspicious_processes = [
+                        "powershell.exe",
+                        "cmd.exe",
+                        "wmic.exe",
+                        "mshta.exe",
+                        "rundll32.exe",
+                        "regsvr32.exe",
+                        "certutil.exe",
+                    ]
+
+                    if name.lower() in suspicious_processes:
+                        behavior_bonus += 20
+
+                    # VirusTotal score (will come from file monitoring later)
+                    virustotal_score = 0
+
                     threat_data = predict_threat(
                         cpu_usage=cpu,
                         memory_mb=mem,
                         num_connections=conns_count,
                         file_changes=file_changes,
                         usb_active=usb_active,
+                        virustotal_score=virustotal_score,
+                        behavior_bonus=behavior_bonus,
                     )
 
                     procs.append(
