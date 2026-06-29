@@ -1,11 +1,13 @@
 """
-Backward-compatibility shim.
+Real-time endpoint monitoring package.
 
-Legacy code may `import monitor` — state variables and start_monitoring are
-re-exported from app.monitoring. List state is shared in-place via state.py.
+Exports shared state and the start_monitoring entry point used at app startup.
+Re-exports state variables at package level for backward compatibility with
+the original monitor.py import style (monitor.monitored_processes, etc.).
 """
 
-from app.monitoring import (
+from app.monitoring.manager import start_monitoring
+from app.monitoring.state import (
     file_change_lock,
     file_events_log,
     monitored_processes,
@@ -13,7 +15,6 @@ from app.monitoring import (
     recent_file_changes_count,
     simulation_mode,
     simulation_type,
-    start_monitoring,
     usb_connected,
 )
 
