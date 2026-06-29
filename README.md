@@ -397,8 +397,6 @@ Developed as part of the **OSF Hackathon**.
 
 ---
 
----
-
 ## ⭐ Acknowledgements
 
 Special thanks to the open-source communities behind:
