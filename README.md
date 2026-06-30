@@ -36,6 +36,24 @@ Unlike traditional antivirus software that primarily relies on signature-based d
 ---
 
 # ✨ Key Features
+## 🔐 Role-Based Access Control (RBAC)
+
+SentinelX implements Role-Based Access Control (RBAC) to ensure that users only have access to the features and actions permitted by their assigned role. This enhances system security, minimizes unauthorized access, and enforces the principle of least privilege.
+
+Role	Permissions
+Administrator	Full system access, user management, security policies, automated response configuration, report generation, and dashboard management.
+Analyst	View alerts, analyze threats, monitor endpoints, generate reports, and perform incident investigation.
+Viewer	Read-only access to the dashboard, alerts, and system status without modification privileges.
+# RBAC Features
+- JWT-Based Authentication
+- Secure Password Hashing
+- Role-Based Authorization
+- Protected API Endpoints
+- Session Timeout
+- Secure Login & Logout
+- Access Control for Critical Operations
+
+---
 
 ## 🔍 Real-Time Endpoint Monitoring
 
@@ -82,12 +100,14 @@ Used for:
 
 ---
 
-## 🔐 Authentication & Security
+## 🔐 Authentication & Access Control
 
 - JWT Authentication
 - Role-Based Access Control (Admin, Analyst, Viewer)
 - Secure Password Hashing
-- Session Timeout *(In Progress)*
+- Protected REST APIs
+- Session Timeout 
+- Secure Login & Logout
 
 ---
 
@@ -104,7 +124,7 @@ Used for:
 
 ---
 
-## 📄 Security Reporting *(In Progress)*
+## 📄 Security Reporting 
 
 - Threat Summary
 - Incident History
