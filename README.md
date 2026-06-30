@@ -1,172 +1,138 @@
-# 🛡️ Malicious Threat Scanner & Response System
+# 🛡️ SentinelX EDR
 
-> **An AI-Assisted Real-Time Endpoint Security Solution for Threat Detection, Monitoring, and Automated Response**
+> **AI-Powered Endpoint Detection & Response (EDR) System for Real-Time Threat Detection, Intelligent Analysis, and Automated Incident Response**
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
 ![React](https://img.shields.io/badge/React-Frontend-61DAFB)
 ![Vite](https://img.shields.io/badge/Vite-Build-purple)
 ![SQLite](https://img.shields.io/badge/SQLite-Database-blue)
+![JWT](https://img.shields.io/badge/JWT-Authentication-orange)
+![AI](https://img.shields.io/badge/AI-Scikit--Learn-red)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ---
 
-## 📖 Overview
+# 📖 Overview
 
-The **Malicious Threat Scanner & Response System** is an AI-assisted cybersecurity application developed for the **OSF Hackathon**. It provides real-time monitoring of endpoint activities, detects suspicious behavior using heuristic analysis, integrates with external threat intelligence, and enables automated response actions through an interactive web dashboard.
+**SentinelX EDR** is an AI-powered Endpoint Detection and Response (EDR) platform developed for the **OSF Hackathon**. The system continuously monitors endpoint activities, intelligently detects malicious behavior using AI-driven threat analysis, validates threats through external threat intelligence, and automatically responds to high-risk incidents.
 
-Unlike traditional antivirus software that primarily relies on signature-based detection, this system focuses on monitoring system behavior, identifying suspicious activities, and providing administrators with actionable security insights.
-
----
-
-## 🎯 Objectives
-
-* Monitor endpoint activities in real time.
-* Detect suspicious processes and file activities.
-* Analyze system behavior using heuristic detection techniques.
-* Verify suspicious files through VirusTotal.
-* Generate real-time alerts.
-* Support automated threat response.
-* Provide an intuitive security dashboard for administrators.
+Unlike traditional antivirus software that primarily relies on signature-based detection, SentinelX adopts a behavioral analysis approach by monitoring endpoint activities in real time and assigning dynamic threat scores for proactive threat detection and mitigation.
 
 ---
 
-# ✨ Features
+# 🎯 Objectives
 
-### 🔍 Real-Time Monitoring
-
-* Running Process Monitoring
-* File System Monitoring
-* USB Device Monitoring
-* CPU & Memory Usage Tracking
-* Live System Status Monitoring
-
----
-
-### 🛡️ Threat Detection
-
-* Heuristic-based threat analysis
-* Suspicious process identification
-* Suspicious file detection
-* Threat scoring
-* Real-time alert generation
+- Continuously monitor endpoint activities in real time.
+- Detect suspicious processes, files, and network activities.
+- Analyze threats using AI-based behavioral analysis.
+- Validate threats using VirusTotal Intelligence.
+- Calculate dynamic threat scores.
+- Automatically mitigate high-risk threats.
+- Provide centralized security monitoring.
+- Secure access using JWT Authentication and RBAC.
+- Generate security reports for auditing and analysis.
 
 ---
 
-### 🌐 Threat Intelligence
+# ✨ Key Features
+
+## 🔍 Real-Time Endpoint Monitoring
+
+- Process Monitoring
+- File System Monitoring
+- Network Connection Monitoring
+- USB Device Monitoring
+- Live System Status
+
+---
+
+## 🤖 AI-Based Threat Detection
+
+- Machine Learning Threat Analysis
+- Dynamic Threat Scoring
+- Behavioral Detection
+- Risk Classification
+- Intelligent Threat Prioritization
+
+---
+
+## 🌐 Threat Intelligence
 
 Integrated with:
 
-* VirusTotal API
+- VirusTotal API
 
 Used for:
 
-* File reputation lookup
-* Malware verification
-* Threat validation
+- File Reputation Lookup
+- Malware Validation
+- SHA-256 Hash Verification
+- Threat Intelligence Correlation
 
 ---
 
-### ⚡ Automated Response
+## ⚡ Automated Threat Response
 
-The system supports automated mitigation actions such as:
-
-* Process termination
-* File quarantine
-* Alert generation
-* Incident logging
-
----
-
-### 📊 Interactive Dashboard
-
-The React dashboard provides:
-
-* Live Alerts
-* Running Processes
-* File Monitoring Logs
-* Network Information
-* Threat Statistics
-* System Performance
-* Threat Charts
-* Monitoring Settings
+- Process Termination
+- Policy-Based Mitigation
+- Threat Containment
+- Incident Logging
+- Alert Generation
 
 ---
 
-## 🏗️ System Architecture
+## 🔐 Authentication & Security
+
+- JWT Authentication
+- Role-Based Access Control (Admin, Analyst, Viewer)
+- Secure Password Hashing
+- Session Timeout *(In Progress)*
+
+---
+
+## 📊 Interactive Dashboard
+
+- Live Threat Score
+- Security Alerts
+- Running Processes
+- File Monitoring Logs
+- Network Monitoring
+- Threat Analytics
+- Security Policies
+- System Health Monitoring
+
+---
+
+## 📄 Security Reporting *(In Progress)*
+
+- Threat Summary
+- Incident History
+- Risk Assessment
+- PDF Report Generation
+- Security Audit Reports
+
+---
+
+# 🏗️ System Architecture
 
 ```text
                 React Frontend
                        │
-             REST API (JSON)
+               REST API (JSON)
                        │
-                FastAPI Backend
+               FastAPI Backend
                        │
- ┌───────────────────────────────────────┐
- │ Authentication                        │
- │ Monitoring Manager                    │
- │ ├── Process Monitor (psutil)          │
- │ ├── File Monitor (watchdog)           │
- │ └── USB Monitor                       │
- │                                       │
- │ Threat Detection Engine               │
- │ VirusTotal Integration                │
- │ Response Engine                       │
- │ SQLite Database                       │
- └───────────────────────────────────────┘
-```
-
----
-
-# ⚙️ Technology Stack
-
-| Category            | Technology                |
-| ------------------- | ------------------------- |
-| Frontend            | React, Vite, Tailwind CSS |
-| Backend             | FastAPI, Python           |
-| Database            | SQLite, SQLAlchemy        |
-| Monitoring          | psutil, watchdog          |
-| Threat Intelligence | VirusTotal API            |
-| HTTP Client         | Axios                     |
-| Authentication      | JWT-based Authentication  |
-| Charts              | Chart.js                  |
-
----
-
-# 📂 Project Structure
-
-```text
-backend/
-│
-├── app/
-│   ├── api/
-│   ├── auth/
-│   ├── core/
-│   ├── database/
-│   ├── detection/
-│   ├── intelligence/
-│   ├── monitoring/
-│   ├── response/
-│   ├── schemas/
-│   └── services/
-│
-├── main.py
-└── sentinelx.db
-
-frontend/
-│
-├── src/
-│   ├── auth/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   └── App.jsx
-│
-├── package.json
-└── vite.config.js
-
-watch_folder/
-README.md
+        ┌──────────────────────────────┐
+        │ Authentication (JWT + RBAC) │
+        │ Endpoint Monitoring         │
+        │ AI Threat Analysis          │
+        │ Threat Intelligence         │
+        │ Policy Engine               │
+        │ Response Engine             │
+        │ Report Generation           │
+        │ SQLite Database             │
+        └──────────────────────────────┘
 ```
 
 ---
@@ -174,110 +140,183 @@ README.md
 # 🔄 System Workflow
 
 ```text
-System Starts
-      │
-      ▼
-Monitoring Manager
-      │
-      ├──────────────┐
-      │              │
-      ▼              ▼
-Process Monitor   File Monitor
-      │              │
-      ▼              ▼
-Threat Detection Engine
-      │
-      ▼
-VirusTotal Verification
-      │
-      ▼
-Threat Classification
-      │
-      ▼
-Alert Generation
-      │
-      ▼
-SQLite Database
-      │
-      ▼
-Dashboard Update
-      │
-      ▼
-Response Actions
+Endpoint Monitoring
+(Process • File • Network • USB)
+            │
+            ▼
+     Data Collection
+            │
+            ▼
+ AI Threat Analysis Engine
+ (Machine Learning)
+            │
+            ▼
+ Threat Intelligence
+ (VirusTotal API)
+            │
+            ▼
+ Threat Score Generation
+            │
+            ▼
+ Policy & Response Engine
+      │             │
+      ▼             ▼
+ Alert Only   Auto Mitigation
+      │             │
+      └──────┬──────┘
+             ▼
+      Database Storage
+             │
+             ▼
+ Real-Time Dashboard
+             │
+             ▼
+ Security Reports
 ```
 
 ---
 
-# 🛠️ Installation
+# 🚀 Innovative Features
+
+- AI-Powered Threat Scoring
+- Behavioral Threat Detection
+- Real-Time Endpoint Monitoring
+- Automated Threat Mitigation
+- VirusTotal Threat Intelligence
+- Interactive Security Dashboard
+- Configurable Security Policies
+- JWT Authentication & RBAC
+- Automatic Session Timeout *(In Progress)*
+- PDF Security Report Generation *(In Progress)*
+
+---
+
+# ⚙️ Technology Stack
+
+| Category | Technology |
+|-----------|------------|
+| Frontend | React.js, Vite, Tailwind CSS |
+| Backend | FastAPI, Python |
+| AI | Scikit-learn |
+| Monitoring | psutil, Watchdog, Scapy, Windows WMI |
+| Threat Intelligence | VirusTotal API |
+| Database | SQLite / PostgreSQL |
+| Authentication | JWT, Passlib |
+| Charts | Chart.js |
+| HTTP Client | Axios |
+| ORM | SQLAlchemy |
+| Reporting | ReportLab |
+
+---
+
+# 📂 Project Structure
+
+```text
+SentinelX/
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── auth/
+│   │   ├── core/
+│   │   ├── database/
+│   │   ├── intelligence/
+│   │   ├── monitoring/
+│   │   ├── response/
+│   │   ├── schemas/
+│   │   └── services/
+│   │
+│   ├── main.py
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── src/
+│   │   ├── auth/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── App.jsx
+│   │
+│   ├── package.json
+│   └── vite.config.js
+│
+├── watch_folder/
+│
+└── README.md
+```
+
+---
+
+# 🛠 Installation
 
 ## Clone Repository
 
 ```bash
-git clone https://github.com/<your-username>/Threat-Scanner.git
-cd Threat-Scanner
+git clone https://github.com/<username>/SentinelX.git
+cd SentinelX
 ```
 
 ---
 
 ## Backend Setup
 
-Create a virtual environment:
-
 ```bash
-python -m venv venv
+cd backend
+
+python -m venv .venv
 ```
 
-Activate it:
-
-**Windows**
+Windows
 
 ```bash
-venv\Scripts\activate
+.venv\Scripts\activate
 ```
 
-**Linux/macOS**
+Linux/macOS
 
 ```bash
-source venv/bin/activate
+source .venv/bin/activate
 ```
 
-Install dependencies:
+Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Start the backend:
+Run Backend
 
 ```bash
 uvicorn main:app --reload
 ```
 
-Backend URL:
+Backend
 
-```text
+```
 http://localhost:8000
+```
+
+Swagger
+
+```
+http://localhost:8000/docs
 ```
 
 ---
 
 ## Frontend Setup
 
-Install dependencies:
-
 ```bash
+cd frontend
+
 npm install
-```
 
-Run the development server:
-
-```bash
 npm run dev
 ```
 
-Frontend URL:
+Frontend
 
-```text
+```
 http://localhost:5173
 ```
 
@@ -285,109 +324,56 @@ http://localhost:5173
 
 # 🔐 Authentication
 
-The application includes user authentication to secure dashboard access.
+Default Users
 
-* User Login
-* Protected Routes
-* JWT-based Authentication
-* Secure API Access
-
----
-
-# 📁 Monitoring Modules
-
-## Process Monitoring
-
-Monitors:
-
-* Process Name
-* Process ID
-* CPU Usage
-* Memory Usage
+| Username | Password | Role |
+|----------|----------|------|
+| admin | admin123 | Admin |
+| analyst | analyst123 | Analyst |
+| viewer | viewer123 | Viewer |
 
 ---
 
-## File Monitoring
+# 📊 Dashboard Modules
 
-Detects:
-
-* File Creation
-* File Modification
-* File Deletion
-
----
-
-## USB Monitoring
-
-Detects removable storage device events and forwards them to the monitoring subsystem.
-
----
-
-# 🚨 Threat Detection Pipeline
-
-```text
-File / Process Event
-        │
-        ▼
-Behavior Analysis
-        │
-        ▼
-Threat Detection
-        │
-        ▼
-VirusTotal Lookup
-        │
-        ▼
-Threat Classification
-        │
-        ▼
-Alert Generation
-        │
-        ▼
-Response Execution
-```
-
----
-
-# 📊 Dashboard Components
-
-* Dashboard Overview
-* Live Alerts Panel
-* Running Process Table
-* File Logs
-* Network Table
-* Threat Charts
-* System Statistics
-* Settings Panel
+- Live Threat Dashboard
+- AI Threat Score
+- Active Alerts
+- Process Monitoring
+- File Monitoring
+- Network Monitoring
+- USB Monitoring
+- Security Policies
+- Threat Analytics
+- Security Reports *(Upcoming)*
 
 ---
 
 # 🧪 Test Files
 
-The project includes sample files to verify detection and monitoring functionality:
-
 ```text
 watch_folder/
-├── hello.txt
-├── test123.txt
-├── invoice.pdf.exe
-└── encrypted.locked
-```
 
-These files help demonstrate monitoring behavior and detection logic during testing.
+invoice.pdf.exe
+encrypted.locked
+test123.txt
+hello.txt
+```
 
 ---
 
 # 🔮 Future Enhancements
 
-* Advanced Machine Learning Models
-* Ransomware Detection
-* Linux & macOS Support
-* Additional Threat Intelligence Providers
-* SIEM Integration
-* Email Threat Scanning
-* Cloud Deployment
-* Enhanced Behavioral Analytics
+- Deep Learning Threat Detection
+- Browser Extension Monitoring
+- Email Attachment Scanning
+- SIEM Integration
+- Cloud Deployment
+- Linux & macOS Support
+- Multi-Agent Architecture
+- Predictive Threat Intelligence
+- Automated PDF Reports
+- Session Timeout & Audit Logs
 
 ---
 
@@ -397,20 +383,28 @@ Developed as part of the **OSF Hackathon**.
 
 ---
 
-## ⭐ Acknowledgements
+# 🙏 Acknowledgements
 
-Special thanks to the open-source communities behind:
+Special thanks to the open-source community behind:
 
-* FastAPI
-* React
-* Vite
-* psutil
-* watchdog
-* SQLAlchemy
-* VirusTotal
+- FastAPI
+- React
+- Vite
+- Scikit-learn
+- psutil
+- Watchdog
+- Scapy
+- SQLAlchemy
+- Chart.js
+- Tailwind CSS
+- VirusTotal
 
 ---
 
-## 📌 Conclusion
+# 📌 Conclusion
 
-The **Malicious Threat Scanner & Response System** demonstrates how real-time monitoring, behavioral analysis, and external threat intelligence can be combined to improve endpoint security. Built with a modular architecture using FastAPI and React, it provides a practical foundation for modern threat detection and automated incident response while remaining extensible for future enhancements.
+**SentinelX EDR** demonstrates how Artificial Intelligence, behavioral analysis, threat intelligence, and automated response can be integrated into a modern Endpoint Detection and Response platform. By combining real-time monitoring, AI-driven threat scoring, configurable security policies, automated mitigation, and an interactive dashboard, SentinelX provides proactive endpoint protection while minimizing manual intervention. Its modular architecture and scalable design make it a strong foundation for enterprise-grade cybersecurity solutions and future enhancements.
+
+---
+
+## ⭐ If you found this project useful, consider giving it a Star!
