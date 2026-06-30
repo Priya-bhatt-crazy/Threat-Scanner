@@ -44,7 +44,7 @@ Role	Permissions
 Administrator	Full system access, user management, security policies, automated response configuration, report generation, and dashboard management.
 Analyst	View alerts, analyze threats, monitor endpoints, generate reports, and perform incident investigation.
 Viewer	Read-only access to the dashboard, alerts, and system status without modification privileges.
-# RBAC Features
+### RBAC Features
 - JWT-Based Authentication
 - Secure Password Hashing
 - Role-Based Authorization
