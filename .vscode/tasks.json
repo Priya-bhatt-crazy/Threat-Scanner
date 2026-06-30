@@ -1,0 +1,54 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Backend: Run backend",
+      "type": "shell",
+      "command": "cd /d \"${workspaceFolder}\" && .venv\\Scripts\\python.exe backend\\main.py",
+      "options": {
+        "shell": {
+          "executable": "cmd.exe",
+          "args": ["/d", "/c"]
+        }
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false,
+        "echo": true,
+        "reveal": "always",
+        "focus": false
+      }
+    },
+    {
+      "label": "Frontend: Run frontend",
+      "type": "shell",
+      "command": "cd /d \"${workspaceFolder}\\frontend\" && npm.cmd run dev",
+      "options": {
+        "shell": {
+          "executable": "cmd.exe",
+          "args": ["/d", "/c"]
+        }
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false,
+        "echo": true,
+        "reveal": "always",
+        "focus": false
+      }
+    },
+    {
+      "label": "Run all: Backend + Frontend",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Backend: Run backend",
+        "Frontend: Run frontend"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

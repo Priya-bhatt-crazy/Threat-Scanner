@@ -8,7 +8,7 @@ Tables:
 
 import datetime
 
-from sqlalchemy import Column, DateTime, Float, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, Float, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -37,3 +37,21 @@ class Setting(Base):
 
     key = Column(String, primary_key=True, index=True)
     value = Column(String)
+
+class User(Base):
+    """Application users for authentication and role-based access."""
+
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    username = Column(String, unique=True, nullable=False, index=True)
+
+    password = Column(String, nullable=False)
+
+    role = Column(String, nullable=False, default="VIEWER")
+    # ADMIN | ANALYST | VIEWER
+
+    is_active = Column(Boolean, default=True)
+
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)

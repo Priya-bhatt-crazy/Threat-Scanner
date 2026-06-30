@@ -16,6 +16,8 @@ from app.database import SessionLocal, Setting, init_db
 from app.monitoring import start_monitoring
 from app.monitoring.state import monitored_processes
 from app.response.auto_response import check_and_auto_respond
+from app.detection.correlation_engine import global_correlation_engine
+
 
 
 def _auto_response_loop() -> None:
@@ -31,6 +33,9 @@ def _auto_response_loop() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Train AI correlation engine
+    global_correlation_engine.train_model()
+
     # 1. Initialize SQLite database and default settings
     init_db()
 

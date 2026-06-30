@@ -1,0 +1,1 @@
+"SentinelX is an AI-powered Enterprise Endpoint Detection & Response (EDR) platform with Role-Based Access Control (RBAC), automated response, audit logging, and an AI Security Advisor that not only detects threats but also recommends the next best security actions based on real-time system behavior."

@@ -8,20 +8,24 @@ export default {
     extend: {
       colors: {
         cyber: {
-          bg: "#F4F7FC",       // Clean light blue-gray
-          card: "#FFFFFF",     // Pure white cards
-          border: "#E2E8F0",   // Light gray borders
-          glow: "#059669",     // Forest green for visibility in light mode
-          danger: "#DC2626",   // Alert red
-          warning: "#D97706",  // Amber caution
-          info: "#2563EB",     // Info blue
-          text: "#1E293B",     // Deep dark gray
-          muted: "#64748B"     // Cool slate gray for subtitles
+          bg: "#F5F2FC",       // Light lilac background
+          card: "#FAF7FD",     // Lilac-white card background
+          border: "#DFD5F5",   // Soft lilac border
+          glow: "#8B5CF6",     // Vibrant violet accent
+          danger: "#E11D48",   // Rose danger
+          warning: "#D97706",  // Amber warning
+          info: "#3B82F6",     // Soft blue info
+          text: "#2C1E47",     // Deep violet text
+          muted: "#7E7399"     // Muted violet-slate text
         }
       },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
       boxShadow: {
-        'glow-green': '0 4px 20px rgba(5, 150, 105, 0.15)',
-        'glow-red': '0 4px 20px rgba(220, 38, 38, 0.15)',
+        'glow-green': '0 4px 20px rgba(139, 92, 246, 0.15)',
+        'glow-red': '0 4px 20px rgba(225, 29, 72, 0.15)',
         'glow-amber': '0 4px 20px rgba(217, 119, 6, 0.15)',
       }
     },
